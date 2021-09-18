@@ -33,6 +33,20 @@ public class DemoServlet extends HttpServlet {
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
     
+    String fullUri = req.getRequestURI();
+    String query = "SELECT ";
+    
+    if (fullUri.startswith("/products/id")) {
+      query += "* FROM table WHERE id=" + fullUri.substring(12);
+    }
+    
+    String results = spannerHelper(query);
+    
+    resp.setContentType("text/plain");
+    resp.getWriter().println("{ \"name\": \"" + results + "\" }"); // {"name": "0"}
+  }
+  
+  private String spannerHelper(String query) {
     String instanceId = "project";
     String databaseId = "os-products-db";
     
@@ -47,7 +61,7 @@ public class DemoServlet extends HttpServlet {
       DatabaseClient dbClient =
           spanner.getDatabaseClient(DatabaseId.of(options.getProjectId(), instanceId, databaseId));
       // Queries the database
-      ResultSet resultSet = dbClient.singleUse().executeQuery(Statement.of("SELECT *"));
+      ResultSet resultSet = dbClient.singleUse().executeQuery(Statement.of(query));
       
       // Prints the results
       while (resultSet.next()) {
@@ -58,7 +72,7 @@ public class DemoServlet extends HttpServlet {
       spanner.close();
     }
     
-    resp.setContentType("text/plain");
-    resp.getWriter().println("{ \"name\": \"" + results + "\" }"); // {"name": "0"}
+    return results
   }
+  
 }
