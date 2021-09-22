@@ -65,14 +65,14 @@ public class DemoServlet extends HttpServlet {
       
       // Prints the results
       while (resultSet.next()) {
-        results += resultSet.getLong(0) + "\n"
+        results += resultSet.getLong(0) + "\n";
       }
     } finally {
       // Closes the client which will free up the resources used
       spanner.close();
     }
     
-    return results
+    return results;
   }
   
 }
