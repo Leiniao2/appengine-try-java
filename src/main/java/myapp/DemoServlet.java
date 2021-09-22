@@ -36,7 +36,7 @@ public class DemoServlet extends HttpServlet {
     String fullUri = req.getRequestURI();
     String query = "SELECT ";
     
-    if (fullUri.startswith("/products/id")) {
+    if (fullUri.startsWith("/products/id")) {
       query += "* FROM table WHERE id=" + fullUri.substring(12);
     }
     
